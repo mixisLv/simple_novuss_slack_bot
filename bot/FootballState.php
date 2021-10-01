@@ -7,7 +7,10 @@ use Slack\Message\MessageBuilder;
 
 class FootballState
 {
-    protected $playersNeeded;
+    /**
+     * @var null|int
+     */
+    private $playersNeeded = null;
 
     /**
      * @var null|\SQLite3
@@ -16,18 +19,28 @@ class FootballState
 
     /**
      * FootballState constructor.
-     * @param int $playersNeeded
      */
-    public function __construct($playersNeeded = null)
+    public function __construct()
     {
         $this->db = new Database();
-        if ($playersNeeded == 2 || $playersNeeded == 4) {
-            $this->playersNeeded = $playersNeeded;
-        } else {
-            $this->playersNeeded = 4;
-        }
     }
 
+    /**
+     * Return true if joined, false if already present
+     *
+     * @param $player
+     * @param $playersNeeded
+     *
+     * @return bool
+     */
+    public function begin($player, $playersNeeded): bool
+    {
+        if (!$this->db->getActiveGame()) {
+            return $this->db->createActiveGame($player, $playersNeeded);
+        }
+
+        return false;
+    }
 
     /**
      * Return true if joined, false if already present
@@ -41,7 +54,7 @@ class FootballState
         }
 
         if (!$this->db->getActiveGame()) {
-            return $this->db->createActiveGame($player);
+            return false;
         }
 
         return $this->db->addPlayer($player);
@@ -115,7 +128,7 @@ class FootballState
      */
     public function start($player): bool
     {
-        if ($this->getPlayerCount() != $this->playersNeeded) {
+        if ($this->getPlayerCount() != $this->getPlayersNeeded()) {
             return false;
         }
 
@@ -142,6 +155,13 @@ class FootballState
      */
     public function getPlayersNeeded(): int
     {
+        if ($this->playersNeeded === null) {
+            $game = $this->db->getActiveGame();
+            if ($game) {
+                $this->playersNeeded = $game['players_needed'];
+            }
+        }
+
         return $this->playersNeeded;
     }
 

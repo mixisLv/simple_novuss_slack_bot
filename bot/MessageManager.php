@@ -53,13 +53,15 @@ class MessageManager extends AbstractMessageManager
      * @param array $message
      * @return array|null
      */
-    protected function onBegin(array $message)
+    protected function onBegin(array $message, $playersNeeded = '')
     {
         if ($this->state->getPlayerCount() > 0) {
             return $this->state->getMessage();
         }
 
-        if (!$this->state->join($message['user'])) {
+        $playersNeeded = !empty($playersNeeded) ? (int)$playersNeeded : getenv('APP_BOT_PLAYERS_NEEDED');
+
+        if (!$this->state->begin($message['user'], $playersNeeded)) {
             return null;
         }
 

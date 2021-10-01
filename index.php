@@ -3,14 +3,14 @@
 use w\Bot\FootballState;
 
 include_once __DIR__ . '/init.php';
-$footballState = new FootballState(getenv('APP_BOT_PLAYERS_NEEDED'));
+$footballState = new FootballState();
 $client = JoliCode\Slack\ClientFactory::create(getenv('APP_BOT_OAUTH_TOKEN'));
 
 $payload = null;
 $input = file_get_contents('php://input');
 $payload = json_decode($input, true);
 
-if (is_null($payload)) {
+if (is_null($payload) && isset($_POST['payload'])) {
     $payload = json_decode($_POST['payload'], true);
 }
 if (empty($payload)) {

@@ -190,11 +190,11 @@ class Database extends \SQLite3
         }
 
         $playId = $this->createPlay($owner);
-
+        // @todo konfigurācijā uzlikt, lai var izvēlēties četratā spēlējot jāizspēlē ar katru, vai tikai vienu spēli
         if ($countPlayers == 4) {
             $this->createGameInstance($playId, $players[0], $players[1], $players[2], $players[3]); // AB CD
-            $this->createGameInstance($playId, $players[0], $players[2], $players[1], $players[3]); // AC BD
-            $this->createGameInstance($playId, $players[0], $players[3], $players[1], $players[2]); // AD BC
+            //$this->createGameInstance($playId, $players[0], $players[2], $players[1], $players[3]); // AC BD
+            //$this->createGameInstance($playId, $players[0], $players[3], $players[1], $players[2]); // AD BC
         } elseif ($countPlayers == 2) {
             $this->createGameInstance($playId, $players[0], $players[1]); // A B
         }
@@ -430,16 +430,19 @@ class Database extends \SQLite3
 
     /**
      * @param string $player
+     * @param int    $playersNeeded
+     *
      * @return bool
      */
-    public function createActiveGame($player)
+    public function createActiveGame(string $player, int $playersNeeded): bool
     {
         $query = $this->prepare('
-            INSERT INTO active_game(players, status) 
-            VALUES(:players, \'pending\')
+            INSERT INTO active_game(players, status, players_needed) 
+            VALUES(:players, \'pending\', :players_needed)
         ');
         $players = json_encode([$player]);
         $query->bindParam('players', $players);
+        $query->bindParam('players_needed', $playersNeeded);
         $query->execute();
 
         return true;

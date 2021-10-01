@@ -20,7 +20,7 @@ abstract class AbstractMessageManager
     /**
      * @var array
      */
-    protected static $prepends = [',']; // Can be only in length of 1
+    protected static $prepends = [',', '!']; // Can be only in length of 1
 
     protected static $commands;
 
