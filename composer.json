@@ -2,12 +2,12 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "require": {
-    "vlucas/phpdotenv": "^5.3",
+    "vlucas/phpdotenv": "^2.4",
     "ext-sqlite3": "*",
     "ext-json": "*",
     "ext-mbstring": "*",
     "guzzlehttp/guzzle": "^7.0",
-    "jolicode/slack-php-api": "^4.3",
+    "jolicode/slack-php-api": "^3.0",
     "http-interop/http-factory-guzzle": "^1.0"
   },
   "autoload": {
