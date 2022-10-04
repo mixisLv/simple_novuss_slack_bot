@@ -2,7 +2,8 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "require": {
-    "vlucas/phpdotenv": "^2.4",
+    "php": "^8.0",
+    "vlucas/phpdotenv": "^5.3",
     "ext-sqlite3": "*",
     "ext-json": "*",
     "ext-mbstring": "*",
